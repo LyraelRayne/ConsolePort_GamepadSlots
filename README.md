@@ -45,6 +45,12 @@ Two bindings under ConsolePort's custom bindings:
 
 Hold one to widen Blizzard's gamepad targeting cone toward hostile or friendly units. Release it to target the highlighted unit, or the nearest enemy or friend if nothing is highlighted.
 
+### Interact (Blizzard button)
+
+A binding under ConsolePort's custom bindings, **Interact (Blizzard button)**, that clicks Blizzard's own gamepad interact button. It does whatever Blizzard's interact would: loot, talk, gather, or attack. It skips an out-of-range soft target, and holding it toggles auto-loot.
+
+On ConsolePort_Bar, the button it's bound to shows the same icon as Blizzard's interact button (loot, talk, gather, attack, or the greyed "unable" versions), updated whenever Blizzard redraws it. ConsolePort's config window shows the binding without the live icon.
+
 ### Turn With Camera switching
 
 Switches the game's Turn With Camera setting (`GamePadTurnWithCamera`) between two values: one while a modifier is held, another when it's released. The ConsolePort version of LyraelForever's LT camera switch.
@@ -89,6 +95,7 @@ Paddles only respond once ConsolePort recognises them as gamepad buttons. If you
 | `Paging.lua` | A secure header registered with ConsolePort's pager. On each page change it works out each gamepad slot's target and publishes it as `map-<slot>` attributes. It applies these to its own slot buttons and to ConsolePort_Bar's buttons. |
 | `GamepadSlots.lua` | Registers the gamepad slot bars with ConsolePort's action bar API, and creates a small secure button for each bound slot. |
 | `Targeting.lua` | The two targeting buttons and their bindings. |
+| `Interact.lua` | The Blizzard interact click binding, and the live icon that copies Blizzard's interact icon. |
 | `Camera.lua` | The modifier state driver, the hold binding, and the hooks that coordinate with ConsolePort's own Turn With Camera handling. |
 | `Options.lua` | The ConsolePort config tab. It's built like ConsolePort_Bar's own tab, with a setting row type that reads and writes the AceDB profile. |
 
@@ -104,6 +111,7 @@ None of these are documented API, so a ConsolePort update can break them. Check 
   - **When the check doesn't fire:** if ConsolePort renames the snippet's text so the `mainBarActionID` match fails, nothing is patched and there's no message. ConsolePort_Bar buttons then simply stop paging.
   - This can't be tested until a ConsolePort update triggers it.
 - **Custom bindings:** `db.Bindings.Custom` and `db.Bindings.Special`.
+- **Interact icon:** a Special binding's `texture` given as a function (ConsolePort's `SkinUtility.SetTexture` calls it and its returned cleanup); Blizzard's `GamepadMainActionBarFrame:UpdateInteractIcons()` and the interact button's name (`GamepadMainActionBarFramePageUnitTopCenteredAnchorTopBarActionButton5`), which is Blizzard's, not ConsolePort's.
 - **Camera:** `db.Movement` and its `UpdateTurnWithCamera`, `GetTurnWithCameraValue` and `fmSpellOverride`/`fmVehicleOverride` fields, plus its `UNIT_SPELLCAST_*_START` handlers (replaced by name).
 - **Config tab:** `ConsolePort:RegisterConfigCallback`, `configEnv:CreatePanel`, `SettingsPanel`, `SettingsRenderer`, `Elements.Setting`/`Button`/`InitializeSetting` and `env.Setting`. These are the same pieces ConsolePort_Bar uses for its own tab.
 

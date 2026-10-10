@@ -14,5 +14,6 @@ Core.lua
 Paging.lua
 GamepadSlots.lua
 Targeting.lua
+Interact.lua
 Camera.lua
 Options.lua
