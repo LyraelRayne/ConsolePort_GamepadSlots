@@ -1,0 +1,18 @@
+## Interface: 16001
+## Title: Console Port |cff69ccf0Gamepad Slots|r
+## Notes: Lets ConsolePort bind keys to the native gamepad action storage slots (181-360, same range Forever/LyraelForever uses), pages them by stance following ConsolePort's own pager, adds a bindable gamepad targeting-cone mode, and switches Turn With Camera while a modifier is held. Third-party, not an official ConsolePort module.
+## Author: Lyrael
+## RequiredDeps: ConsolePort
+## SavedVariables: ConsolePortGamepadSlotsDB
+
+libs/LibStub/LibStub.lua
+libs/CallbackHandler-1.0/CallbackHandler-1.0.lua
+libs/AceAddon-3.0/AceAddon-3.0.lua
+libs/AceDB-3.0/AceDB-3.0.lua
+
+Core.lua
+Paging.lua
+GamepadSlots.lua
+Targeting.lua
+Camera.lua
+Options.lua
