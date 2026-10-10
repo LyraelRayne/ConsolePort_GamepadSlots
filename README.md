@@ -38,12 +38,15 @@ Default vehicle rules: top Y/B → positions 1–2, right X/Y/B/A → 3–6, bot
 
 ### Gamepad targeting
 
-Two bindings under ConsolePort's custom bindings:
+Three bindings under ConsolePort's custom bindings:
 
 - **Gamepad Targeting: Hostile**
 - **Gamepad Targeting: Friendly**
+- **Clear Target**
 
-Hold one to widen Blizzard's gamepad targeting cone toward hostile or friendly units. Release it to target the highlighted unit, or the nearest enemy or friend if nothing is highlighted.
+Hold one of the targeting bindings to widen Blizzard's gamepad targeting cone toward hostile or friendly units. Release it to target the highlighted unit, or the nearest enemy or friend if nothing is highlighted. They show Blizzard's gamepad targeting icons, the same ones LyraelForever's targeting buttons use.
+
+**Clear Target** clears your target. Bind it to a modifier combo (for example LT+RB) to match LyraelForever's modifier-cancel.
 
 ### Interact (Blizzard button)
 
@@ -62,12 +65,17 @@ Switches the game's Turn With Camera setting (`GamePadTurnWithCamera`) between t
 
 If LyraelForever is enabled on the same character, turn off one of the two camera switches. LyraelForever has its own toggle: **Turn with camera while LT is held**.
 
+### Flip Camera (Hold)
+
+A binding under ConsolePort's custom bindings, **Flip Camera (Hold)**: a hold version of Blizzard's Flip Camera. Pressing it turns the camera 180 degrees to look behind you; releasing it turns the camera back.
+
 ## Settings
 
 Open ConsolePort's config window and choose the **Gamepad Slots** tab. Everything there is controller-friendly.
 
 - **Gamepad Slots → General:** the paging toggle.
 - **Gamepad Slots → Camera:** the Turn With Camera options above.
+- **Gamepad Slots → Soft Targeting:** range and arc for the enemy and friend soft targets (`SoftTargetEnemyRange`/`Arc`, `SoftTargetFriendRange`/`Arc`). These write the game's CVars directly, are saved per character, and aren't part of the profile. Range defaults to 45 yards and the slider goes to 90. The game limits it to tab-targeting range, which isn't documented, so values past that may have no effect. ConsolePort's own Interact section covers the interact soft target.
 - **Gamepad Slots → Profiles:**
   - choose the active profile
   - create a profile for this character or class
@@ -94,9 +102,9 @@ Paddles only respond once ConsolePort recognises them as gamepad buttons. If you
 | `Core.lua` | AceAddon and AceDB setup with profiles. Default rules are copied into each new profile once rather than being AceDB defaults, so a deleted default rule stays deleted. |
 | `Paging.lua` | A secure header registered with ConsolePort's pager. On each page change it works out each gamepad slot's target and publishes it as `map-<slot>` attributes. It applies these to its own slot buttons and to ConsolePort_Bar's buttons. |
 | `GamepadSlots.lua` | Registers the gamepad slot bars with ConsolePort's action bar API, and creates a small secure button for each bound slot. |
-| `Targeting.lua` | The two targeting buttons and their bindings. |
+| `Targeting.lua` | The two targeting buttons, the clear-target button, and their bindings. |
 | `Interact.lua` | The Blizzard interact click binding, and the live icon that copies Blizzard's interact icon. |
-| `Camera.lua` | The modifier state driver, the hold binding, and the hooks that coordinate with ConsolePort's own Turn With Camera handling. |
+| `Camera.lua` | The modifier state driver, the hold bindings (Turn With Camera, Flip Camera), and the hooks that coordinate with ConsolePort's own Turn With Camera handling. |
 | `Options.lua` | The ConsolePort config tab. It's built like ConsolePort_Bar's own tab, with a setting row type that reads and writes the AceDB profile. |
 
 ### ConsolePort internals this relies on

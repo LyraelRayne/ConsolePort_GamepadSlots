@@ -155,3 +155,34 @@ db.Bindings.Special[#db.Bindings.Special + 1] = {
 	name    = bindingName;
 	desc    = 'Hold to use the "held" Turn With Camera value from the Gamepad Slots tab; release to go back to the "released" value. Only works while that feature is enabled.';
 };
+
+---------------------------------------------------------------
+-- Look behind
+---------------------------------------------------------------
+-- A hold version of Blizzard's Flip Camera binding (FLIPCAMERAYAW), which
+-- flips once per press: press turns the camera 180 degrees, release turns it
+-- back. A release only undoes a flip this button made, so an up without a
+-- matching down (e.g. held across a /reload) doesn't turn the camera.
+local LOOK_BEHIND_BUTTON = 'ConsolePortGamepadLookBehind'
+local lookBehindButton = CreateFrame('Button', LOOK_BEHIND_BUTTON, UIParent, 'SecureActionButtonTemplate')
+lookBehindButton:RegisterForClicks('AnyDown', 'AnyUp')
+
+local flipped = false
+lookBehindButton:HookScript('OnClick', function(_, _, down)
+	down = not not down
+	if down ~= flipped then
+		FlipCameraYaw(180)
+		flipped = down
+	end
+end)
+
+local lookBehindCommand = ('CLICK %s:LeftButton'):format(LOOK_BEHIND_BUTTON)
+local lookBehindName = 'Flip Camera (Hold)'
+_G[('BINDING_NAME_%s'):format(lookBehindCommand)] = lookBehindName
+
+db.Bindings.Custom.GamepadLookBehind = lookBehindCommand;
+db.Bindings.Special[#db.Bindings.Special + 1] = {
+	binding = lookBehindCommand;
+	name    = lookBehindName;
+	desc    = 'Hold to look behind you: turns the camera 180 degrees, and turns it back when released.';
+};

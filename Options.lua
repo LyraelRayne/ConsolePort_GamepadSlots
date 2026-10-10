@@ -389,6 +389,49 @@ local function BuildPanel(configEnv)
 	end
 
 	-----------------------------------------------------------
+	-- Soft targeting
+	-----------------------------------------------------------
+	-- Plain CVar rows using ConsolePort's own Cvar element, the same one its
+	-- Interact section uses for SoftTargetInteractRange/Arc. Values live in
+	-- the CVars (character-scoped), not the profile. ConsolePort only exposes
+	-- range and arc for interact; these cover the enemy and friend soft
+	-- targets. Range defaults to 45. The game limits it to tab-targeting
+	-- range (warcraft.wiki.gg CVar list), whose value isn't documented.
+	local ARC_VALUES = { [0] = 'Front', [1] = 'Cone', [2] = 'Around' };
+	local SOFT_TARGETS = {
+		{ key = 'Enemy',  label = 'Enemy'  };
+		{ key = 'Friend', label = 'Friend' };
+	};
+
+	local function AddSoftTargetSettings(AddSetting, main, head)
+		local store;
+		local sort = 0;
+		local function AddCvar(cvar, dataObj, name, desc, list)
+			local value = GetCVar(cvar)
+			if value == nil then return end -- not in this client
+			sort = sort + 1;
+			local row = AddSetting(main, head, {
+				type  = Elements.Cvar;
+				varID = cvar;
+				sort  = sort;
+				field = { dataObj:Set(value), cvar = cvar, name = name, desc = desc, list = list };
+			})
+			store = store or row;
+		end
+
+		for _, target in ipairs(SOFT_TARGETS) do
+			local list = ('%s Soft Target'):format(target.label)
+			AddCvar(('SoftTarget%sRange'):format(target.key), Data.Range(45, 1, 1, 90),
+				'Target Range', ('Distance in yards within which a soft %s target can be found.'):format(target.label:lower()),
+				list)
+			AddCvar(('SoftTarget%sArc'):format(target.key), Data.Map(1, ARC_VALUES),
+				'Arc Allowance', ('Area around you where a soft %s target can be found: only in front, a cone in front, or all around.'):format(target.label:lower()),
+				list)
+		end
+		return store;
+	end
+
+	-----------------------------------------------------------
 	-- Provider
 	-----------------------------------------------------------
 	local Settings = CreateFromMixins(configEnv.SettingsPanel, configEnv.SettingsRenderer, Panel);
@@ -405,7 +448,9 @@ local function BuildPanel(configEnv)
 		general.sort = 1;
 
 		AddCameraSettings(AddSetting, GROUP.GENERAL, 'Camera').sort = 2;
-		AddProfileSettings(AddSetting, GROUP.GENERAL, 'Profiles').sort = 3;
+		local softTarget = AddSoftTargetSettings(AddSetting, GROUP.GENERAL, 'Soft Targeting')
+		if softTarget then softTarget.sort = 3 end
+		AddProfileSettings(AddSetting, GROUP.GENERAL, 'Profiles').sort = 4;
 
 		for offset = 1, env.NUM_STANCES do
 			AddRuleEditor(AddSetting, GROUP.STANCES, StanceName(offset), 'stance' .. offset, 'stance',
